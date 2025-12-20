@@ -1,5 +1,5 @@
-from application.server import APIServer
 from application.config import settings
+from application.server import APIServer
 
 auth_app = APIServer(
     name=settings.NAME,
