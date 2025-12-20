@@ -3,11 +3,11 @@ import logging
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Callable
 
-from dishka import AsyncContainer
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import APIRouter, FastAPI
 
 from application.config import settings
+from application.providers import ProvidersManager
 
 
 class APIServer:
@@ -15,13 +15,12 @@ class APIServer:
         self,
         name: str,
         routers: list[APIRouter] | None = None,
-        container: AsyncContainer | None = None,
         start_callbacks: list[Callable] | None = None,
         stop_callbacks: list[Callable] | None = None,
     ) -> None:
         self._init_logger()
         self.name = name
-        self.container = container
+        self.container = ProvidersManager().make_container()
         self.app = FastAPI(
             title=name,
             lifespan=self._lifespan,
