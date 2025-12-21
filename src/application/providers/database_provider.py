@@ -2,6 +2,7 @@ from dishka import Provider, Scope, provide
 
 from application.config import settings
 from infrastructure.database.database_adapter import DatabaseAdapter
+from infrastructure.database.redis_adapter import RedisAdapter
 
 
 class DatabaseProvider(Provider):
@@ -16,3 +17,7 @@ class DatabaseProvider(Provider):
             database=settings.POSTGRES.database,
             echo=settings.POSTGRES.echo,
         )
+
+    @provide(scope=Scope.APP)
+    def provide_redis(self) -> RedisAdapter:
+        return RedisAdapter()
