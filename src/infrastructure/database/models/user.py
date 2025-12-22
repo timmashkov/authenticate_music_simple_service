@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING, List
+
 from sqlalchemy import Integer, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.database.models import Base
+
+if TYPE_CHECKING:
+    from .role import Role
 
 
 class User(Base):
@@ -37,4 +42,9 @@ class User(Base):
         unique=True,
         nullable=False,
         comment="Телефонный номер пользователя",
+    )
+
+    roles: Mapped[List["Role"]] = relationship(
+        secondary="user_roles",
+        back_populates="users",
     )

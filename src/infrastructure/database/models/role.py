@@ -1,0 +1,33 @@
+from typing import TYPE_CHECKING, List
+
+from sqlalchemy import String
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from infrastructure.database.models import Base
+
+if TYPE_CHECKING:
+    from infrastructure.database.models.permission import Permission
+    from infrastructure.database.models.user import User
+
+
+class Role(Base):
+
+    name: Mapped[str] = mapped_column(String, unique=True, comment="Название роли")
+
+    data: Mapped[dict] = mapped_column(
+        JSONB,
+        server_default="{}",
+        default={},
+        comment="Дополнительные данные",
+    )
+
+    users: Mapped[List["User"]] = relationship(
+        secondary="user_roles",
+        back_populates="roles",
+    )
+
+    permissions: Mapped[List["Permission"]] = relationship(
+        secondary="role_permissions",
+        back_populates="roles",
+    )

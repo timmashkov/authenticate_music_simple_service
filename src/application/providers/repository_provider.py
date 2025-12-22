@@ -1,6 +1,13 @@
 from dishka import Provider, Scope, provide
 
-from infrastructure.database import UserReadRepository, UserWriteRepository
+from infrastructure.database import (
+    PermissionReadRepository,
+    PermissionWriteRepository,
+    RoleReadRepository,
+    RoleWriteRepository,
+    UserReadRepository,
+    UserWriteRepository,
+)
 from infrastructure.database.database_adapter import DatabaseAdapter
 
 
@@ -16,3 +23,27 @@ class UserRepositoryProvider(Provider):
         self, database_adapter: DatabaseAdapter
     ) -> UserWriteRepository:
         return UserWriteRepository(database_adapter)
+
+    @provide(scope=Scope.REQUEST)
+    def provide_role_read_repository(
+        self, database_adapter: DatabaseAdapter
+    ) -> RoleReadRepository:
+        return RoleReadRepository(database_adapter)
+
+    @provide(scope=Scope.REQUEST)
+    def provide_role_write_repository(
+        self, database_adapter: DatabaseAdapter
+    ) -> RoleWriteRepository:
+        return RoleWriteRepository(database_adapter)
+
+    @provide(scope=Scope.REQUEST)
+    def provide_permission_read_repository(
+        self, database_adapter: DatabaseAdapter
+    ) -> PermissionReadRepository:
+        return PermissionReadRepository(database_adapter)
+
+    @provide(scope=Scope.REQUEST)
+    def provide_permission_write_repository(
+        self, database_adapter: DatabaseAdapter
+    ) -> PermissionWriteRepository:
+        return PermissionWriteRepository(database_adapter)
