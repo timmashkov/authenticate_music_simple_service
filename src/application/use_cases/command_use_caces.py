@@ -7,7 +7,12 @@ from domain.entities.user import (
     ReadUserDomainModel,
     UpdateUserDomainModel,
 )
+from domain.entities.role import (
+    CreateRoleDomainModel,
+    ReadRoleDomainModel,
+)
 from domain.repositories.user_repositories import UserABSWriteRepository
+from domain.repositories.role_repositories import RoleABSWriteRepository
 from infrastructure.authenticate.security_manager import SecurityManager
 
 
@@ -24,7 +29,6 @@ class CommandUserUseCases:
     async def execute_create_user(self, **kwargs) -> ReadUserDomainModel:
         kwargs["password"] = self._salt_pass(kwargs["password"], kwargs["login"])
         command = CreateUserDomainModel(**kwargs)
-        print(command)
         return await self.user_repository.create_user(command)
 
     async def execute_update_user(self, **kwargs) -> ReadUserDomainModel:
@@ -37,3 +41,25 @@ class CommandUserUseCases:
 
     async def execute_delete_user(self, user_id: UUID) -> ReadUserDomainModel:
         return await self.user_repository.delete_user(user_id)
+
+
+class CommandRoleUseCases:
+    def __init__(
+        self, role_repository: RoleABSWriteRepository
+    ) -> None:
+        self.role_repository = role_repository
+
+    async def execute_create_role(self, **kwargs) -> ReadUserDomainModel:
+        command = CreateRoleDomainModel(**kwargs)
+        return await self.role_repository.create_role(command)
+
+    async def execute_update_role(self, **kwargs) -> ReadUserDomainModel:
+        command = CreateRoleDomainModel(
+            name=kwargs["name"], data=kwargs["data"]
+        )
+        return await self.role_repository.update_role(
+            role_data=command, role_uuid=kwargs["uuid"]
+        )
+
+    async def execute_delete_role(self, role_id: UUID) -> ReadUserDomainModel:
+        return await self.role_repository.delete_role(role_id)

@@ -1,12 +1,12 @@
 from dishka import Provider, Scope, provide
 
-from application.use_cases import CommandUserUseCases, QueryUserUseCases
+from application.use_cases import CommandUserUseCases, QueryUserUseCases, CommandRoleUseCases
 from application.use_cases.auth_use_cases import AuthenticateUserUseCase
 from domain.services.auth_services import TokenProvider
 from infrastructure.authenticate.cookie_manager import CookieManager
 from infrastructure.authenticate.security_manager import SecurityManager
 from infrastructure.authenticate.session_manager import SessionManager
-from infrastructure.database import UserReadRepository, UserWriteRepository
+from infrastructure.database import UserReadRepository, UserWriteRepository, RoleWriteRepository
 
 
 class UseCaseProvider(Provider):
@@ -21,6 +21,12 @@ class UseCaseProvider(Provider):
         self, user_repository: UserWriteRepository, security_manager: SecurityManager
     ) -> CommandUserUseCases:
         return CommandUserUseCases(user_repository, security_manager)
+
+    @provide(scope=Scope.REQUEST)
+    def provide_command_role_cases(
+            self, role_repository: RoleWriteRepository,
+    ) -> CommandRoleUseCases:
+        return CommandRoleUseCases(role_repository)
 
     @provide(scope=Scope.REQUEST)
     def provide_authenticate(
