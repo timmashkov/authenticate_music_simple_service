@@ -1,5 +1,6 @@
 from .auth import AuthRouter
-from .user import UserRouter
+from .permission import PermissionRouter
 from .role import RoleRouter
+from .user import UserRouter
 
-__all__: tuple[str] = ("AuthRouter", "UserRouter", "RoleRouter")
+__all__: tuple[str] = ("AuthRouter", "UserRouter", "RoleRouter", "PermissionRouter")

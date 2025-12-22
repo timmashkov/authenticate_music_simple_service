@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field, SecretStr
+from pydantic import BaseModel, Field
 
 from infrastructure.database.models import Role
 from presentation.models._filter import _APIFilter

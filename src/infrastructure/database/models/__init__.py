@@ -1,10 +1,10 @@
 from typing import TypeVar
 
+from .association import RolePermission, UserRole
 from .base import Base
-from .user import User
-from .role import Role
 from .permission import Permission
-from .association import UserRole, RolePermission
+from .role import Role
+from .user import User
 
 table = TypeVar("table")
 

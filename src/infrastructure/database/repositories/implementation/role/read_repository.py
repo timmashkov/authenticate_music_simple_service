@@ -1,6 +1,4 @@
-from uuid import UUID
-
-from sqlalchemy import and_, select
+from sqlalchemy import select
 
 from domain.entities.role import ReadRoleDomainModel
 from domain.repositories.role_repositories import RoleABSReadRepository

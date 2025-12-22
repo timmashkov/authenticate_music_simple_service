@@ -4,8 +4,9 @@ from uuid import UUID
 
 
 @dataclass
-class CreateRoleDomainModel:
+class CreatePermissionDomainModel:
     name: str
+    layer: str
     data: dict
 
     def as_dict(self) -> dict:
@@ -13,7 +14,7 @@ class CreateRoleDomainModel:
 
 
 @dataclass
-class ReadRoleDomainModel(CreateRoleDomainModel):
+class ReadPermissionDomainModel(CreatePermissionDomainModel):
     uuid: UUID
     created_at: datetime
     updated_at: datetime
