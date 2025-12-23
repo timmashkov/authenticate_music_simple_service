@@ -53,6 +53,9 @@ class CommandRoleUseCases:
         command = CreateRoleDomainModel(**kwargs)
         return await self.role_repository.create_role(command)
 
+    async def execute_adding_role(self, role_uuid: UUID, user_uuid: UUID):
+        return await self.role_repository.add_role_to_user(role_uuid, user_uuid)
+
     async def execute_update_role(self, **kwargs) -> ReadRoleDomainModel:
         command = CreateRoleDomainModel(name=kwargs["name"], data=kwargs["data"])
         return await self.role_repository.update_role(

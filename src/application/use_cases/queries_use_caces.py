@@ -19,6 +19,12 @@ class QueryUserUseCases:
     ) -> list[ReadUserDomainModel]:
         return await self.user_repository.find_users(filters)
 
+    async def execute_read_user_with_roles(
+        self, user_uuid: UUID
+    ):
+        result = await self.user_repository.get_user_with_roles(user_uuid)
+        return result
+
     async def execute_read_user(self, user_uuid: UUID) -> ReadUserDomainModel | None:
         if found_user := await self.user_repository.get_by_id(user_uuid):
             return found_user

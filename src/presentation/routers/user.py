@@ -30,6 +30,14 @@ class UserRouter:
         return await user_provider.execute_read_user(user_uuid)
 
     @staticmethod
+    @api_router.get("/{user_uuid}/roles")
+    @inject
+    async def get_user_with_roles(
+            user_uuid: UUID, user_provider: FromDishka[QueryUserUseCases]
+    ):
+        return await user_provider.execute_read_user_with_roles(user_uuid)
+
+    @staticmethod
     @api_router.get("/", response_model=list[output_model])
     @inject
     async def get_users_list(

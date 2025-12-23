@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from sqlalchemy import and_, select
+from sqlalchemy.orm import joinedload
 
 from domain.entities.user import ReadUserDomainModel
 from domain.repositories.user_repositories import UserABSReadRepository
@@ -31,6 +32,15 @@ class UserReadRepository(UserABSReadRepository):
             result = await session.execute(query)
             answer = result.scalar_one_or_none()
         return self._to_domain_entity(answer) if answer else None
+
+    async def get_user_with_roles(
+        self, user_id: UUID,
+    ) -> ReadUserDomainModel | None:
+        async with self._read_repo._session() as session:
+            query = select(User).where(User.uuid == user_id).options(joinedload(User.roles))
+            result = await session.execute(query)
+            answer = result.unique().scalar_one_or_none()
+        return answer
 
     async def find_users(self, filters) -> list[ReadUserDomainModel]:
         found_users = await self._read_repo.find(filters)
