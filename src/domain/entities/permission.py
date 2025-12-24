@@ -1,20 +1,14 @@
-from dataclasses import asdict, dataclass
-from datetime import datetime
-from uuid import UUID
+from dataclasses import dataclass
+
+from domain.entities.base import BaseDomainEntity
 
 
 @dataclass
-class CreatePermissionDomainModel:
+class CreatePermissionDomainModel(BaseDomainEntity):
     name: str
     layer: str
-    data: dict
-
-    def as_dict(self) -> dict:
-        return asdict(self)
 
 
 @dataclass
 class ReadPermissionDomainModel(CreatePermissionDomainModel):
-    uuid: UUID
-    created_at: datetime
-    updated_at: datetime
+    pass

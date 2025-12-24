@@ -1,16 +1,14 @@
-from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
-from uuid import UUID
+from dataclasses import dataclass
+from typing import List
+
+from domain.entities import ReadRoleDomainModel
+from domain.entities.base import BaseDomainEntity
 
 
 @dataclass
-class UpdateUserDomainModel:
+class UpdateUserDomainModel(BaseDomainEntity):
     age: int
     phone_number: str
-    data: dict
-
-    def as_dict(self) -> dict:
-        return asdict(self)
 
 
 @dataclass
@@ -22,15 +20,9 @@ class CreateUserDomainModel(UpdateUserDomainModel):
 
 @dataclass
 class ReadUserDomainModel(CreateUserDomainModel):
-    uuid: UUID
-    created_at: datetime
-    updated_at: datetime
+    pass
 
-    def change_password(self, new_hashed_password: str) -> None:
-        self.password = new_hashed_password
-        self.updated_at = datetime.now(UTC)
 
-    def update_profile(self, age: int, phone_number: str) -> None:
-        self.age = age
-        self.phone_number = phone_number
-        self.updated_at = datetime.now(UTC)
+@dataclass
+class UserWithRoles(ReadUserDomainModel):
+    roles: List[ReadRoleDomainModel] | None

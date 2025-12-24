@@ -1,4 +1,3 @@
-from typing import Any
 from uuid import UUID
 
 from domain.entities.user import CreateUserDomainModel
@@ -17,26 +16,15 @@ class UserWriteRepository(UserABSWriteRepository):
             session_adapter=session_adapter, model=User
         )
 
-    @staticmethod
-    def _to_domain_entity(user_model: User) -> CreateUserDomainModel:
-        return CreateUserDomainModel(
-            login=user_model.login,
-            password=user_model.password,
-            email=user_model.email,
-            age=user_model.age,
-            phone_number=user_model.phone_number,
-            data=user_model.data,
-        )
-
-    async def create_user(self, user_data: CreateUserDomainModel) -> Any:
+    async def create_user(self, user_data: CreateUserDomainModel) -> User:
         return await self._write_repo.create_item(**user_data.as_dict())
 
     async def update_user(
         self, user_uuid: UUID, user_data: CreateUserDomainModel
-    ) -> Any:
+    ) -> User:
         user_data = user_data.as_dict()
         user_data["uuid"] = user_uuid
         return await self._write_repo.update_item(**user_data)
 
-    async def delete_user(self, uuid: UUID) -> Any:
+    async def delete_user(self, uuid: UUID) -> User:
         return await self._write_repo.delete_item(uuid=uuid)

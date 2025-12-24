@@ -1,9 +1,11 @@
 from datetime import datetime
+from typing import List
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field, SecretStr
 
 from infrastructure.database.models import User
+from presentation.models import RoleReadModel
 from presentation.models._filter import _APIFilter
 
 
@@ -26,6 +28,7 @@ class UserReadModel(UserWriteModel):
     uuid: UUID
     created_at: datetime = Field(description=User.created_at.comment)
     updated_at: datetime = Field(description=User.updated_at.comment)
+    roles: List["RoleReadModel"] | None
 
 
 class UserFilter(_APIFilter):

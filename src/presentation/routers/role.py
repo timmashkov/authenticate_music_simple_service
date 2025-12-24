@@ -46,9 +46,9 @@ class RoleRouter:
     @api_router.post("/to_user/{user_uuid}", response_model=output_model)
     @inject
     async def add_role_to_user(
-            user_uuid: UUID,
-            role_uuid: UUID,
-            role_provider: FromDishka[CommandRoleUseCases],
+        user_uuid: UUID,
+        role_uuid: UUID,
+        role_provider: FromDishka[CommandRoleUseCases],
     ):
         return await role_provider.execute_adding_role(role_uuid, user_uuid)
 

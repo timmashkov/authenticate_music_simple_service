@@ -3,7 +3,7 @@ from uuid import UUID
 from application.exceptions import EntityNotFoundError
 from domain.entities.permission import ReadPermissionDomainModel
 from domain.entities.role import ReadRoleDomainModel
-from domain.entities.user import ReadUserDomainModel
+from domain.entities.user import ReadUserDomainModel, UserWithRoles
 from domain.repositories.permissions_repository import PermissionABSReadRepository
 from domain.repositories.role_repositories import RoleABSReadRepository
 from domain.repositories.user_repositories import UserABSReadRepository
@@ -17,17 +17,16 @@ class QueryUserUseCases:
     async def execute_read_users(
         self, filters: _APIFilter
     ) -> list[ReadUserDomainModel]:
-        return await self.user_repository.find_users(filters)
+        users_list = await self.user_repository.find_users(filters)
+        return [ReadUserDomainModel.from_orm(user) for user in users_list]
 
-    async def execute_read_user_with_roles(
-        self, user_uuid: UUID
-    ):
-        result = await self.user_repository.get_user_with_roles(user_uuid)
-        return result
+    async def execute_read_user_with_roles(self, user_uuid: UUID) -> UserWithRoles:
+        user_with_roles = await self.user_repository.get_user_with_roles(user_uuid)
+        return UserWithRoles.from_orm(user_with_roles)
 
     async def execute_read_user(self, user_uuid: UUID) -> ReadUserDomainModel | None:
         if found_user := await self.user_repository.get_by_id(user_uuid):
-            return found_user
+            return ReadUserDomainModel.from_orm(found_user)
         raise EntityNotFoundError(user_uuid)
 
 
@@ -38,11 +37,12 @@ class QueryRoleUseCases:
     async def execute_read_roles(
         self, filters: _APIFilter
     ) -> list[ReadRoleDomainModel]:
-        return await self.role_repository.find_roles(filters)
+        role_lists = await self.role_repository.find_roles(filters)
+        return [ReadRoleDomainModel.from_orm(role) for role in role_lists]
 
     async def execute_read_role(self, role_name: str) -> ReadRoleDomainModel | None:
         if found_role := await self.role_repository.get_by_name(role_name):
-            return found_role
+            return ReadRoleDomainModel.from_orm(found_role)
         raise EntityNotFoundError(role_name)
 
 
@@ -53,11 +53,12 @@ class QueryPermissionUseCases:
     async def execute_read_perms(
         self, filters: _APIFilter
     ) -> list[ReadPermissionDomainModel]:
-        return await self.perm_repository.find_permissions(filters)
+        perms_lists = await self.perm_repository.find_permissions(filters)
+        return [ReadPermissionDomainModel.from_orm(perm) for perm in perms_lists]
 
     async def execute_read_perm(
         self, perm_uuid: UUID
     ) -> ReadPermissionDomainModel | None:
         if found_perm := await self.perm_repository.get_by_id(perm_uuid):
-            return found_perm
+            return ReadPermissionDomainModel.from_orm(found_perm)
         raise EntityNotFoundError(perm_uuid)

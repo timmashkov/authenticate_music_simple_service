@@ -1,4 +1,3 @@
-from typing import Any
 from uuid import UUID
 
 from sqlalchemy import insert
@@ -20,17 +19,10 @@ class RoleWriteRepository(RoleABSWriteRepository):
             session_adapter=session_adapter, model=Role
         )
 
-    @staticmethod
-    def _to_domain_entity(role_model: Role) -> CreateRoleDomainModel:
-        return CreateRoleDomainModel(
-            name=role_model.name,
-            data=role_model.data,
-        )
-
-    async def create_role(self, role_data: CreateRoleDomainModel) -> Any:
+    async def create_role(self, role_data: CreateRoleDomainModel) -> Role:
         return await self._write_repo.create_item(**role_data.as_dict())
 
-    async def add_role_to_user(self, role_uuid: UUID, user_uuid: UUID):
+    async def add_role_to_user(self, role_uuid: UUID, user_uuid: UUID) -> None:
         async with self._session.transactional_session() as session:
             stmt = insert(UserRole).values(role_uuid=role_uuid, user_uuid=user_uuid)
             await session.execute(stmt)
@@ -38,10 +30,10 @@ class RoleWriteRepository(RoleABSWriteRepository):
 
     async def update_role(
         self, role_uuid: UUID, role_data: CreateRoleDomainModel
-    ) -> Any:
+    ) -> Role:
         role_data = role_data.as_dict()
         role_data["uuid"] = role_uuid
         return await self._write_repo.update_item(**role_data)
 
-    async def delete_role(self, uuid: UUID) -> Any:
+    async def delete_role(self, uuid: UUID) -> Role:
         return await self._write_repo.delete_item(uuid=uuid)
