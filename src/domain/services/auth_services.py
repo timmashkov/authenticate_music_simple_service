@@ -16,3 +16,7 @@ class TokenProvider(ABC):
     @abstractmethod
     def verify_token(self, token: str) -> AuthSession:
         pass
+
+    @abstractmethod
+    def refresh_tokens(self, refresh_token: str) -> tuple[str, str] | None:
+        pass

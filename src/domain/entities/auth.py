@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta, timezone
 from typing import List
 from uuid import UUID
 
@@ -31,6 +31,12 @@ class AuthSession:
     def can_refresh(self) -> bool:
         return self.refresh_token is not None and not self.is_expired()
 
+    def time_until_expiry(self) -> timedelta:
+        now = datetime.now(timezone.utc)
+        if now > self.expires_at:
+            return timedelta(seconds=0)
+        return self.expires_at - now
+
 
 @dataclass
 class AuthenticationResult:
@@ -39,6 +45,7 @@ class AuthenticationResult:
     refresh_token: str | None
     token_type: str = "bearer"
     expires_in: int = 3600
+    time_left_for_token: timedelta | None = None
 
 
 @dataclass

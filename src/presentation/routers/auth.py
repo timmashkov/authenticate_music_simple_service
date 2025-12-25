@@ -31,3 +31,22 @@ class AuthRouter:
         if not result:
             return LogoutResultModel(status=True)
         raise HTTPException(status_code=400, detail="Logout failed")
+
+    @staticmethod
+    @api_router.post("/refresh")
+    @inject
+    async def refresh(
+            auth_provider: FromDishka[AuthenticateUserUseCase],
+            response: Response,
+            request: Request,
+    ):
+        return await auth_provider.execute_refresh_tokens(response, request)
+
+    @staticmethod
+    @api_router.post("/check_auth")
+    @inject
+    async def check_auth(
+            auth_provider: FromDishka[AuthenticateUserUseCase],
+            request: Request,
+    ):
+        return await auth_provider.execute_check_auth(request)
